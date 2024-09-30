@@ -1,20 +1,50 @@
 import './Login.css'
+import { useForm } from "react-hook-form"
+import { DevTool } from '@hookform/devtools'
 
 function Login() {
+  type formValue = {
+    username: string
+    password: string
+  }
+  const form = useForm<formValue>();
+  const { register, control, handleSubmit, formState } = form;
+  const { errors } = formState;
+  const onSubmit = (data: formValue) => {
+    console.log("form data", data)
+  }
   return (
     <>
       <h1>Welcome to Bookwise</h1>
 
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="user-input">
           <div className="input-field">
             <label htmlFor="username">Username</label>
-            <input type="text" id="username" name="username" required />
+            <input type="text" id="username" {...register("username", {
+              required: {
+                value: true,
+                message: 'Username is required'
+              }, 
+              validate: {
+
+              }
+            })} />
+            <p className='validation'>{errors.username?.message}</p>
           </div>
 
           <div className="input-field">
             <label htmlFor="password">Password</label>
-            <input type="password" id="password" name="password" required />
+            <input type="password" id="password" {...register("password",{
+              required: {
+                value: true,
+                message: 'Password is required'
+              },
+              validate: {
+
+              }
+            })} />
+            <p className='validation'>{errors.password?.message}</p>
           </div>
 
           <div className="remember-me">
@@ -43,6 +73,7 @@ function Login() {
           </p>
         </div>
       </form >
+      <DevTool control={control} />
     </>
   );
 }
